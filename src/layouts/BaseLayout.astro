@@ -15,8 +15,11 @@ const {
 
 <!doctype html>
 <html lang="en" data-theme="lofi">
-  <head>
+<head>
     <BaseHead title={title} description={description} image={image} ogType={ogType} />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    
     {TRANSITION_API && <ViewTransitions />}
   </head>
   <body>
@@ -175,6 +178,8 @@ const {
     position: relative;
     overflow: hidden;
   }
+
+  
 </style>
   </body>
 </html>
