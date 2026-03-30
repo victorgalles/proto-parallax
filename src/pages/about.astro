@@ -1,0 +1,253 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const pageTitle = "VIC // ABOUT";
+---
+
+<BaseLayout title={pageTitle}>
+  <section class="about-container">
+    <div class="about-top-grid">
+      <div class="bio-column">
+        <h2 class="section-label">[ORIGIN_STORY]</h2>
+        <p class="bio-text">
+          Brazilian-born digital artist and creative technologist operating under the alias 
+          <span class="highlight">Datajunkz</span>. My journey began in video art, 
+          finding a pure form of expression through VJing and the infinite 
+          possibilities of real-time rendering.
+        </p>
+        <p class="bio-text">
+          Currently exploring new visual languages within the DIGICREA 
+          Master’s program in Europe, my work investigates how code can translate 
+          physical and spatial experiences into interactive installations.
+        </p>
+        <p class="bio-text">
+          I focus on the intersection of movement and digital environments, 
+          embracing constant experimentation and the <span class="highlight">intentional 
+          errors</span> of the machine as a core creative tool.
+        </p>
+      </div>
+
+      <div class="photo-column">
+        <div class="scanner-container" id="scanner-wrapper">
+          <canvas id="mono-canvas" style="display:none;"></canvas>
+          <canvas id="scanner-canvas"></canvas>
+          <div class="scanner-line" id="scanner-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-full-width">
+      <div class="info-grid">
+        <div class="info-section">
+          <h2 class="section-label">[SKILLS]</h2>
+          <ul class="skills-list">
+            <li>EXPERIMENTAL CINEMA & VJ</li>
+            <li>IMMERSIVE INSTALLATIONS</li>
+            <li>SOUND DESIGN & SYNTHESIS</li>
+            <li>INTERACTIVE SYSTEMS</li>
+            <li>CREATIVE CODING</li>
+          </ul>
+        </div>
+
+        <div class="info-section">
+          <h2 class="section-label">[STUDIES]</h2>
+          <ul class="studies-list">
+            <li>
+              <span class="study-title">Cinema & Audiovisual</span>
+              <span class="study-details">Universidade do Sul de Santa Catarina // 2017 - 2022</span>
+            </li>
+            <li>
+              <span class="study-title">Digital Arts and Science</span>
+              <span class="study-details">DIGICREA EMJM // 2025 - Present</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  function initScanner() {
+    const monoCanvas = document.getElementById('mono-canvas');
+    if (!monoCanvas) return;
+
+    const monoCtx = monoCanvas.getContext('2d', { willReadFrequently: true });
+    const scannerCanvas = document.getElementById('scanner-canvas');
+    const scannerCtx = scannerCanvas.getContext('2d', { alpha: false });
+    const wrapper = document.getElementById('scanner-wrapper');
+    const line = document.getElementById('scanner-line');
+    const img = new Image();
+
+    const blueColor = { r: 27, g: 86, b: 253 }; 
+    const bgColor = { r: 244, g: 244, b: 244 }; 
+
+    img.src = '/me.jpg'; 
+
+    let width, height;
+    let isHovered = false;
+
+    img.onload = () => {
+      width = monoCanvas.width = scannerCanvas.width = 600; 
+      height = monoCanvas.height = scannerCanvas.height = 600;
+      
+      monoCtx.drawImage(img, 0, 0, width, height);
+      const pixels = monoCtx.getImageData(0, 0, width, height);
+      const data = pixels.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        const factor = brightness / 255;
+        data[i] = bgColor.r * factor + blueColor.r * (1 - factor);
+        data[i + 1] = bgColor.g * factor + blueColor.g * (1 - factor);
+        data[i + 2] = bgColor.b * factor + blueColor.b * (1 - factor);
+      }
+
+      monoCtx.putImageData(pixels, 0, 0);
+      scannerCtx.drawImage(monoCanvas, 0, 0, width, height);
+    };
+
+    function updateScanner(e) {
+      if (!isHovered) return;
+      const rect = wrapper.getBoundingClientRect();
+      const y = ((e.clientY - rect.top) / rect.height) * height;
+      line.style.top = `${((e.clientY - rect.top) / rect.height) * 100}%`;
+
+      scannerCtx.drawImage(monoCanvas, 0, y, width, 1, 0, y, width, height - y);
+      scannerCtx.drawImage(monoCanvas, 0, 0, width, y, 0, 0, width, y);
+    }
+
+    wrapper.addEventListener('mousemove', updateScanner);
+    wrapper.addEventListener('mouseenter', () => {
+      isHovered = true;
+      line.style.opacity = "1";
+    });
+    wrapper.addEventListener('mouseleave', () => {
+      isHovered = false;
+      line.style.opacity = "0";
+      scannerCtx.drawImage(monoCanvas, 0, 0, width, height);
+    });
+  }
+
+  initScanner();
+  document.addEventListener('astro:after-swap', initScanner);
+</script>
+
+<style>
+  .about-container {
+    max-width: 1200px;
+    margin: 80px auto 100px auto; /* Espaço no topo reduzido */
+    padding: 0 40px;
+  }
+
+  .about-top-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 100px;
+    margin-bottom: 80px;
+    align-items: start; /* Alinhado pelo topo para manter a linha do horizonte */
+  }
+
+  .scanner-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    background-color: #f4f4f4;
+    overflow: hidden;
+  }
+
+  #scanner-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+  }
+
+  .scanner-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: rgb(27, 86, 253);
+    box-shadow: 0 0 10px rgba(27, 86, 253, 0.8);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+  }
+
+  .info-full-width {
+    border-top: 1px solid rgba(27, 86, 253, 0.3); /* Linha mais fina para leveza */
+    padding-top: 60px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 80px;
+  }
+
+  .section-label {
+    font-family: monospace;
+    color: rgb(27, 86, 253);
+    font-weight: bold;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+  }
+
+  .bio-text {
+    font-size: 1.0rem; /* Levemente menor para melhor legibilidade */
+    line-height: 1.25;
+    color: rgb(27, 86, 253);
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  .highlight {
+    opacity: 0.8;
+  }
+
+  .skills-list, .studies-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .skills-list li {
+    font-size: 1rem;
+    font-weight: 800;
+    color: rgb(27, 86, 253);
+    border-bottom: 1px solid rgba(27, 86, 253, 0.2);
+    padding: 10px 0;
+    text-transform: uppercase;
+  }
+
+  .studies-list li {
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(27, 86, 253, 0.2);
+  }
+
+  .study-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: rgb(27, 86, 253);
+    text-transform: uppercase;
+  }
+
+  .study-details {
+    font-size: 0.85rem;
+    font-family: monospace;
+    color: rgb(27, 86, 253);
+    opacity: 0.7;
+    margin-top: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .about-top-grid, .info-grid { 
+      grid-template-columns: 1fr; 
+      gap: 40px; 
+    }
+    .about-container { margin-top: 40px; }
+  }
+</style>

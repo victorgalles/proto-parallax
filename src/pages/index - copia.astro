@@ -1,0 +1,197 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const pageTitle = "VIC // SELECTED_WORKS";
+
+const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+---
+
+<BaseLayout title={pageTitle}>
+  
+  <div class="video-gallery">
+    {allProjects.length === 0 && <p class="error-msg">Nenhum projeto encontrado.</p>}
+    
+    {allProjects.map((project) => (
+      <div class="project-row">
+        <div class="video-column">
+          <div 
+            class="video-placeholder" 
+            data-video-id={project.data.youtubeID}
+            style={`background-image: url(${getYoutubeThumb(project.data.youtubeID)});`}
+            onclick="this.innerHTML = `<iframe src='https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&modestbranding=1&rel=0' allow='autoplay; encrypted-media' allowfullscreen></iframe>`; this.classList.add('is-playing');"
+          >
+            <div class="blue-overlay">
+               <span class="play-hint">PLAY_VIDEO</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-column">
+          <div class="info-content">
+            <div class="meta-header">
+              {project.data.date && <span class="project-date">[{project.data.date}]</span>}
+              <h2 class="project-title">{project.data.title}</h2>
+            </div>
+
+            <p class="project-description">
+              {project.data.description || "Experimental digital art piece exploring technology and movement."}
+            </p>
+            
+            <div class="project-tags">
+              {project.data.tags?.map(tag => (
+                <span class="tag">#{tag.toUpperCase()}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    ))}
+
+    <div class="photo-break-grid">
+      <div class="photo-item large" style="background-image: url('/fotos/ensaio-01.jpg');">
+        <span class="photo-label">[STILL_01]</span>
+      </div>
+      <div class="photo-column-stack">
+        <div class="photo-item small" style="background-image: url('/fotos/ensaio-02.jpg');">
+           <span class="photo-label">[STILL_02]</span>
+        </div>
+        <div class="photo-item small" style="background-image: url('/fotos/ensaio-03.jpg');">
+           <span class="photo-label">[STILL_03]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* Layout Geral */
+  .video-gallery {
+    max-width: 1200px;
+    margin: 40px auto 100px auto; 
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 140px; /* Aumentei o espaço para uma melhor quebra de página visual */
+  }
+
+  /* Estilos Projetos de Vídeo */
+  .project-row {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: flex-start;
+    gap: 60px;
+  }
+
+  /* Alternância de lado para dinamismo visual */
+  .project-row:nth-child(even) { direction: rtl; }
+  .project-row:nth-child(even) .info-content { direction: ltr; }
+
+  .video-placeholder {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgb(27, 86, 253);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+
+  .video-placeholder:hover { transform: scale(1.01); }
+
+  /* Overlay Azul Victor Galles */
+  .blue-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(27, 86, 253, 0.7);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    z-index: 20;
+  }
+  .play-hint { color: white; font-family: monospace; font-size: 0.8rem; border: 1px solid white; padding: 5px 10px; }
+  .video-placeholder:hover .blue-overlay { opacity: 1; }
+
+  /* Tipografia Ajustada */
+  .meta-header { margin-bottom: 15px; }
+  
+  .project-date {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: rgb(27, 86, 253);
+    opacity: 0.6;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .project-title {
+    font-size: 1.4rem; /* Reduzi o tamanho conforme pedido */
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgb(27, 86, 253);
+    letter-spacing: -1px;
+  }
+
+  .project-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: rgb(27, 86, 253);
+    margin-bottom: 25px;
+    max-width: 450px;
+  }
+
+  /* Tags Livres */
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap; /* Permite que as tags quebrem linha livremente */
+    gap: 10px;
+    max-width: 100%;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    color: rgb(27, 86, 253);
+    border: 1px solid rgba(27, 86, 253, 0.3);
+    padding: 2px 8px;
+    font-family: monospace;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .tag:hover { background: rgb(27, 86, 253); color: white; }
+
+  /* Galeria de Fotos */
+  .photo-break-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    height: 550px;
+    margin-top: 40px;
+  }
+  .photo-column-stack { display: grid; grid-template-rows: 1fr 1fr; gap: 20px; }
+  .photo-item { 
+    background-size: cover; 
+    background-position: center; 
+    border: 1px solid rgba(27, 86, 253, 0.2); 
+    position: relative; 
+    filter: grayscale(100%); 
+    transition: all 0.6s ease; 
+  }
+  .photo-item:hover { filter: grayscale(0%); }
+  .photo-label { position: absolute; bottom: 10px; left: 10px; font-family: monospace; font-size: 0.6rem; background: white; padding: 2px 6px; }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    .project-row { grid-template-columns: 1fr; direction: ltr !important; gap: 30px; }
+    .video-gallery { gap: 80px; padding: 0 20px; }
+    .photo-break-grid { grid-template-columns: 1fr; height: auto; }
+    .photo-item { aspect-ratio: 16/9; }
+    .project-title { font-size: 2rem; }
+  }
+</style>

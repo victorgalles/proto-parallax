@@ -1,0 +1,93 @@
+---
+/* Header.astro */
+---
+<header class="fixed top-0 left-0 w-full p-8 z-50 pointer-events-none">
+  <div class="hidden md:flex justify-between items-start w-full">
+    <a href="/" class="pointer-events-auto"> <div class="border-[6px] border-[#1b56fd] px-6 py-2 bg-white/50 backdrop-blur-sm inline-grid place-items-center overflow-hidden hover:bg-white/80 transition-colors">
+        <h1 
+          id="creative-name" 
+          class="text-6xl font-bold lowercase tracking-tighter text-[#1b56fd] whitespace-nowrap col-start-1 row-start-1 z-10"
+          data-value="victor galles"
+        >
+          victor galles
+        </h1>
+        <h1 class="text-6xl font-bold lowercase tracking-tighter opacity-0 pointer-events-none col-start-1 row-start-1 select-none">
+          victor galles
+        </h1>
+      </div>
+    </a>
+    
+    <nav class="flex flex-col items-end gap-2 pointer-events-auto text-right">
+      <a href="/about" class="text-4xl font-bold text-[#1b56fd] hover:opacity-50 leading-none">About</a>
+      <a href="/" class="text-4xl font-bold text-[#1b56fd] hover:opacity-50 leading-none">Selected Works</a>
+      <a href="/contact" class="text-4xl font-bold text-[#1b56fd] hover:opacity-50 leading-none">Contact</a>
+    </nav>
+  </div>
+
+  <div class="flex md:hidden flex-col items-start w-full gap-4 pointer-events-auto">
+    <a href="/"> <div class="border-[3px] border-[#1b56fd] px-3 py-1 bg-white/80 backdrop-blur-sm">
+        <h1 class="text-2xl font-bold lowercase tracking-tighter text-[#1b56fd]">victor galles</h1>
+      </div>
+    </a>
+    <nav class="flex gap-4 bg-white/80 backdrop-blur-sm px-2 py-1 border-b border-[#1b56fd]">
+      <a href="/about" class="text-xs font-bold text-[#1b56fd] uppercase tracking-widest">About</a>
+      <a href="/" class="text-xs font-bold text-[#1b56fd] uppercase tracking-widest underline">Works</a>
+      <a href="/contact" class="text-xs font-bold text-[#1b56fd] uppercase tracking-widest">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  function initHeaderGlitch() {
+    const target = document.querySelector("#creative-name");
+    if (!target) return;
+    const original = target.dataset.value;
+    let isHovered = false;
+    let frameCount = 0;
+    const velocidade = 8; 
+    const chars = "01_$#X*+=/-ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    const scramble = (str) => {
+      return str.split('').map(char => {
+        if (char === " ") return " ";
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
+    };
+
+    const update = () => {
+      frameCount++;
+      if (isHovered) {
+        if (frameCount % velocidade === 0) {
+          target.innerText = scramble(original);
+        }
+      } else {
+        target.innerText = original;
+      }
+      requestAnimationFrame(update);
+    };
+
+    // Aplica o efeito no link pai para ser mais responsivo ao mouse
+    const linkParent = target.closest('a');
+    linkParent.addEventListener("mouseenter", () => isHovered = true);
+    linkParent.addEventListener("mouseleave", () => {
+      isHovered = false;
+      target.innerText = original;
+    });
+    update();
+  }
+  initHeaderGlitch();
+  document.addEventListener('astro:after-swap', initHeaderGlitch);
+</script>
+
+<style>
+  .inline-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    min-height: 80px;
+  }
+  #creative-name {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+  }
+</style>

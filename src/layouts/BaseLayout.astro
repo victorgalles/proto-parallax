@@ -1,0 +1,180 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { ViewTransitions } from "astro:transitions";
+import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API } from "../config";
+
+const {
+  image,
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  ogType,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <BaseHead title={title} description={description} image={image} ogType={ogType} />
+    {TRANSITION_API && <ViewTransitions />}
+  </head>
+  <body>
+    <div class="bg-[#f4f4f4] min-h-screen">
+      <Header title={SITE_TITLE} />
+      
+      <div class="flex justify-center w-full">
+        <main class="p-6 pt-64 w-full max-w-[1200px]">
+          <slot />
+        </main>
+      </div>
+      <Footer />
+    </div>
+
+    <div id="custom-cursor"></div>
+
+    <script is:inline>
+      function initCursor() {
+        const cursor = document.getElementById('custom-cursor');
+        if (!cursor) return;
+
+        // Reset de posição para evitar saltos na troca de página
+        let mouseX = 0;
+        let mouseY = 0;
+
+        const onMouseMove = (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          
+          requestAnimationFrame(() => {
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            cursor.style.opacity = "1";
+          });
+        };
+
+        const onMouseDown = () => cursor.classList.add('cursor-clicking');
+        const onMouseUp = () => cursor.classList.remove('cursor-clicking');
+
+        // Adiciona os eventos
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mouseup', onMouseUp);
+
+        // Feedback para links (usando delegação para funcionar em novos elementos)
+        document.addEventListener('mouseover', (e) => {
+          if (e.target.closest('a') || e.target.closest('button')) {
+            cursor.style.transform = 'translate(-50%, -50%) scale(2.5)';
+            cursor.style.backgroundColor = 'rgba(27, 86, 253, 0.4)';
+          }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+          if (e.target.closest('a') || e.target.closest('button')) {
+            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursor.style.backgroundColor = 'rgb(1, 24, 216)';
+          }
+        });
+      }
+
+      // 1. Inicializa na carga inicial
+      initCursor();
+
+      // 2. Reinicializa após a troca de página do ViewTransitions
+      document.addEventListener('astro:after-swap', initCursor);
+    </script>
+
+<style is:global>
+
+/* 1. CONTROLE DO HEADER */
+  header {
+    /* Ajuste o padding de cima e de baixo do seu nome/menu */
+    padding-top: 20px; 
+    padding-bottom: 10px; /* Diminuir aqui remove o vácuo abaixo do nome */
+    
+    /* Se houver uma altura mínima, zere ela */
+    min-height: auto !important; 
+    margin-bottom: 0 !important;
+  }
+
+  /* 2. CONTROLE DO CONTEÚDO (Onde a mágica acontece) */
+  main, .about-container {
+    /* Se o seu header NÃO for fixo (scrolla junto): */
+    margin-top: 10px !important; 
+    
+    /* Se o seu header FOR fixo (fica parado no topo): 
+       Aumente este valor se o texto sumir atrás do nome "Victor Galles"
+       Diminua se o vácuo estiver muito grande. */
+    padding-top: 90px !important; 
+  }
+
+  /* 3. AJUSTE DO NOME E LINKS */
+  .nav-wrapper, .header-container {
+    /* Se houver um grid ou flex no header, alinhe ao topo */
+    align-items: flex-start !important;
+  }
+  /* 1. FORÇA COR AZUL GLOBAL EM TUDO QUE É TEXTO */
+  *, *::before, *::after {
+    cursor: none !important; /* Mantém o mouse escondido */
+    color: rgb(27, 86, 253) !important; /* O seu Azul Victor Galles */
+    border-color: rgba(27, 86, 253, 0.2) !important; /* Bordas suaves em azul */
+  }
+
+  /* 2. AJUSTE DO FUNDO */
+  html, body {
+    background-color: #f4f4f4 !important; /* Fundo cinza claro artístico */
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 3. EXCEÇÕES NECESSÁRIAS (Elementos que precisam de outra cor) */
+  .blue-overlay {
+    background-color: rgba(27, 86, 253, 0.95) !important;
+  }
+
+  /* Texto dentro do overlay azul deve ser branco para leitura */
+  .blue-overlay *, .play-text, .project-title-overlay {
+    color: white !important;
+  }
+
+  /* 4. O SEU CURSOR AZUL */
+  #custom-cursor {
+    width: 25px;
+    height: 25px;
+    background-color: rgb(1, 24, 216) !important; 
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 100000; 
+    filter: blur(4px);
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  /* 5. SELEÇÃO DE TEXTO (Quando o usuário clica e arrasta) */
+  ::selection {
+    background: rgb(27, 86, 253);
+    color: white;
+  }
+
+  /* Correção para o vídeo preencher todo o espaço */
+  .video-placeholder iframe {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+  }
+
+  /* Garante que o container do vídeo tenha posição relativa */
+  .video-placeholder {
+    position: relative;
+    overflow: hidden;
+  }
+</style>
+  </body>
+</html>

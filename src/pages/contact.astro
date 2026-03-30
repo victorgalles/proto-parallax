@@ -1,0 +1,180 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const pageTitle = "VIC // CONTACT";
+---
+
+<BaseLayout title={pageTitle}>
+  <section class="contact-container">
+    <div class="contact-header">
+      <span class="section-label">[CONNECT]</span>
+      <h1 class="contact-title">LET'S BUILD SOMETHING <span class="italic">NON-LINEAR</span>.</h1>
+    </div>
+
+    <div class="contact-grid">
+      
+      <div class="contact-group">
+        <div class="method-item">
+          <span class="method-label">EMAIL</span>
+          <a href="mailto:victorfreitasgs@gmail.com" class="method-link">VICTORFREITASGS@GMAIL.COM</a>
+        </div>
+
+        <div class="method-item">
+          <span class="method-label">INSTAGRAM</span>
+          <a href="https://instagram.com/datajunkz" target="_blank" class="method-link">@DATAJUNKZ</a>
+        </div>
+      </div>
+
+      <div class="contact-group">
+        <div class="method-item">
+          <span class="method-label">LOCATION</span>
+          <p class="status-text">PORTO, PORTUGAL [UTC+0]</p>
+        </div>
+        
+        <div class="method-item">
+          <span class="method-label">CURRENT_FOCUS</span>
+          <p class="status-text">DIGITAL ARTS & SCIENCE (DIGICREA)</p>
+        </div>
+
+        <div class="method-item">
+          <span class="method-label">AVAILABILITY</span>
+          <p class="status-text">OPEN FOR COLLABORATIONS & INTERNSHIPS</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="contact-footer-line">
+       <span class="glitch-text">EST. 1992 // BRAZIL TO EUROPE</span>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-container {
+    max-width: 1200px;
+    /* Margem alta para não ficar embaixo do Header Fixo */
+    margin: 0 auto;
+    padding: 100px 40px 100px 40px;
+  }
+
+  .contact-header {
+    margin-bottom: 60px;
+  }
+
+  .section-label {
+    font-family: monospace;
+    color: rgb(27, 86, 253);
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    margin-bottom: 1px;
+    display: block;
+    opacity: 0.6;
+  }
+
+  .contact-title {
+    /* clamp(min, ideal, max) */
+    font-size: clamp(2rem, 8vw, 2rem);
+    color: rgb(27, 86, 253);
+    font-weight: 800;
+    line-height: 0.9;
+    max-width: 1000px;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+
+  .italic {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Grid System */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    border-top: 1px solid rgba(27, 86, 253, 0.3);
+    padding-top: 60px;
+  }
+
+  .method-item {
+    margin-bottom: 40px;
+  }
+
+  .method-label {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: rgba(27, 86, 253, 0.5);
+    display: block;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .method-link, .status-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgb(27, 86, 253);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .method-link:hover {
+    opacity: 0.4;
+    transform: translateX(5px);
+  }
+
+  .status-text {
+    cursor: default;
+    max-width: 300px;
+    line-height: 1.2;
+  }
+
+  /* Footer Line */
+  .contact-footer-line {
+    margin-top: 60px;
+    border-top: 1px solid rgba(27, 86, 253, 0.1);
+    padding-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .glitch-text {
+    font-family: monospace;
+    font-size: 0.6rem;
+    color: rgba(27, 86, 253, 0.3);
+    letter-spacing: 3px;
+  }
+
+  /* Responsivo Mobile */
+  @media (max-width: 768px) {
+    .contact-container {
+      padding: 70px 25px 60px 25px;
+    }
+
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-top: 40px;
+    }
+
+    .contact-title {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .method-link, .status-text {
+      font-size: 0.95rem;
+    }
+
+    .contact-footer-line {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .glitch-text {
+      letter-spacing: 1px;
+    }
+  }
+</style>
