@@ -1,0 +1,8 @@
+"Envie" as alterações para o mundo
+Quando estiver satisfeito, abra o terminal (CMD) dentro da pasta proto-parallax e rode estes 3 comandos em sequência:
+
+Preparar: git add . (avisa ao Git que você quer salvar tudo o que mudou).
+
+Carimbar: git commit -m "adicionando novo projeto" (dá um nome para essa versão).
+
+Lançar: git push origin main (manda os arquivos para o GitHub).

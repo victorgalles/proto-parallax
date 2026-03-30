@@ -12,20 +12,37 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 ---
 
 <BaseLayout title={pageTitle}>
-  
+  <div id="mobile-cursor" class="mobile-only-cursor"></div>
+
   <div class="video-gallery">
-    {/* Bloco de Projetos (Vídeos/Fotos Principais) - Mantido Intocado */}
     {allProjects.map((project) => (
       <div class="project-row">
         <div class="video-column">
           {project.data.youtubeID ? (
+            /* AJUSTE: No mobile, ele vira um link <a> que abre o app. 
+               No desktop, mantém o comportamento de carregar o iframe.
+            */
             <div 
-              class="video-placeholder" 
+              class="video-placeholder group" 
               data-video-id={project.data.youtubeID}
               style={`background-image: url(${getYoutubeThumb(project.data.youtubeID)});`}
-              onclick="this.innerHTML = `<iframe src='https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&modestbranding=1&rel=0' allow='autoplay; encrypted-media' allowfullscreen></iframe>`; this.classList.add('is-playing');"
             >
-              <div class="blue-overlay"><span class="play-hint">PLAY_VIDEO</span></div>
+              <a 
+                href={`https://www.youtube.com/watch?v=${project.data.youtubeID}`} 
+                target="_blank" 
+                class="mobile-video-link md:hidden"
+              ></a>
+              
+              <div 
+                class="blue-overlay hidden md:flex"
+                onclick="this.parentElement.innerHTML = `<iframe src='https://www.youtube.com/embed/${this.parentElement.dataset.videoId}?autoplay=1&modestbranding=1&rel=0' allow='autoplay; encrypted-media' allowfullscreen></iframe>`;"
+              >
+                <span class="play-hint">PLAY_VIDEO</span>
+              </div>
+              
+              <div class="blue-overlay flex md:hidden opacity-100 bg-transparent">
+                <span class="play-hint bg-[#1b56fd]">OPEN_IN_APP</span>
+              </div>
             </div>
           ) : (
             <div class="image-container no-filter cursor-zoom-in">
@@ -56,7 +73,7 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
       </div>
     ))}
 
-    {/* SEÇÃO DE GALERIA EDITORIAL (Layout Irregular) */}
+    {/* SEÇÃO DE GALERIA EDITORIAL */}
     {galeriaFotos.length > 0 && (
       <div class="editorial-gallery-container">
         <div class="gallery-info">
@@ -87,15 +104,76 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   </div>
 </BaseLayout>
 
+<script is:inline>
+  // Lógica do Cursor Mobile (Segue o dedo)
+  function initMobileCursor() {
+    const cursor = document.getElementById('mobile-cursor');
+    if (!cursor) return;
+
+    document.addEventListener('touchstart', (e) => {
+      cursor.style.opacity = "1";
+    });
+
+    document.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      // RequestAnimationFrame para suavidade máxima
+      requestAnimationFrame(() => {
+        cursor.style.left = `${touch.clientX}px`;
+        cursor.style.top = `${touch.clientY}px`;
+      });
+    });
+
+    document.addEventListener('touchend', () => {
+      cursor.style.opacity = "0";
+    });
+  }
+
+  initMobileCursor();
+  document.addEventListener('astro:after-swap', initMobileCursor);
+</script>
+
 <style>
-  /* Base Layout & Projetos - Estritamente Mantidos */
-  .video-gallery { max-width: 1100px; margin: 40px auto 100px auto; padding: 0 40px; display: flex; flex-direction: column; gap: 80px; }
+  /* CURSOR MOBILE */
+  .mobile-only-cursor {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #1b56fd;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.1s ease;
+    display: none;
+  }
+
+  /* Link fantasma para forçar abertura no App do YT */
+  .mobile-video-link {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+  }
+
+  @media (max-width: 900px) {
+    .mobile-only-cursor {
+      display: block; /* Só aparece no mobile */
+    }
+    
+    .video-placeholder .play-hint {
+      font-size: 0.6rem;
+      padding: 2px 6px;
+    }
+  }
+
+  /* --- Estilos originais mantidos abaixo --- */
+  .video-gallery { max-width: 1100px; margin: 0 auto; padding: 180px 40px 100px 40px; display: flex; flex-direction: column; gap: 80px; }
   .project-row { display: grid; grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 50px; }
   .project-row:nth-child(even) { direction: rtl; }
   .project-row:nth-child(even) .info-content { direction: ltr; }
   .video-placeholder, .image-container { width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(27, 86, 253, 0.4); overflow: hidden; position: relative; background-size: cover; background-position: center; }
   .project-image-tag { width: 100%; height: 100%; object-fit: cover; }
-  .blue-overlay { position: absolute; inset: 0; background-color: rgba(27, 86, 253, 0.6); opacity: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+  .blue-overlay { position: absolute; inset: 0; background-color: rgba(27, 86, 253, 0.6); opacity: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; z-index: 10; }
   .play-hint { color: white; font-family: monospace; font-size: 0.7rem; border: 1px solid white; padding: 4px 8px; }
   .video-placeholder:hover .blue-overlay { opacity: 1; }
   .lightbox-modal { border: none; background: transparent; outline: none; }
@@ -108,56 +186,24 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   .project-description { font-size: 0.85rem; line-height: 1.4; color: rgb(27, 86, 253); margin-bottom: 15px; max-width: 380px; }
   .tag { font-size: 0.65rem; color: rgb(27, 86, 253); font-family: monospace; opacity: 0.6; margin-right: 8px; }
 
-  /* NOVA GALERIA EDITORIAL - DESIGN IRREGULAR E RESPIRÁVEL */
+  /* EDITORIAL GRID */
   .editorial-gallery-container { margin-top: 100px; }
   .gallery-description { font-size: 0.85rem; font-style: italic; color: rgb(27, 86, 253); opacity: 0.8; margin-bottom: 40px; }
-
-  .editorial-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 colunas base */
-    gap: 30px; /* Mais espaço entre as fotos para "respirar" */
-    grid-auto-flow: dense;
-  }
-
-  .editorial-item {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(27, 86, 253, 0.1);
-    background: #f9f9f9;
-    transition: transform 0.4s ease;
-  }
-
-  /* Lógica "Aleatória" controlada */
-  /* Fotos 1, 5, 9... são grandes e horizontais */
+  .editorial-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; grid-auto-flow: dense; }
+  .editorial-item { position: relative; overflow: hidden; border: 1px solid rgba(27, 86, 253, 0.1); background: #f9f9f9; transition: transform 0.4s ease; }
   .editorial-item:nth-child(4n+1) { grid-column: span 2; grid-row: span 2; aspect-ratio: 1/1; }
-  
-  /* Fotos 2, 6, 10... são verticais */
   .editorial-item:nth-child(4n+2) { grid-column: span 1; grid-row: span 2; aspect-ratio: 9/16; }
-
-  /* Fotos 3, 7... são pequenas 16:9 */
   .editorial-item:nth-child(4n+3) { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
-
-  /* Fotos 4, 8... são quadradas pequenas */
   .editorial-item:nth-child(4n+4) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
-
-  .editorial-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
+  .editorial-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
   .editorial-item:hover .editorial-image { transform: scale(1.05); }
-  .editorial-item:hover { border-color: rgba(27, 86, 253, 0.4); }
-
   .no-filter { filter: none !important; }
 
   @media (max-width: 900px) {
+    .video-gallery { padding-top: 160px; }
     .editorial-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .editorial-item:nth-child(n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 16/9; }
-    .project-row { grid-template-columns: 1fr; }
+    .project-row { grid-template-columns: 1fr; gap: 20px; }
+    .project-row:nth-child(even) { direction: ltr; }
   }
-
-  
 </style>
