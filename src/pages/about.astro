@@ -10,7 +10,7 @@ const pageTitle = "VIC // ABOUT";
         <h2 class="section-label">[ORIGIN_STORY]</h2>
         <p class="bio-text">
           Brazilian-born digital artist and creative technologist operating under the alias 
-          <span class="highlight">Datajunkz</span>. My journey began in video art, 
+          <span class="highlight"><a href="https://instagram.com/datajunkz" target="_blank" class="method-link">Datajunkz</a></span>. My journey began in video art, 
           finding a pure form of expression through VJing and the infinite 
           possibilities of real-time rendering.
         </p>
@@ -175,6 +175,8 @@ const pageTitle = "VIC // ABOUT";
     z-index: 10;
   }
 
+  
+
   .info-full-width {
     border-top: 1px solid rgba(27, 86, 253, 0.3); /* Linha mais fina para leveza */
     padding-top: 60px;
@@ -248,6 +250,13 @@ const pageTitle = "VIC // ABOUT";
       grid-template-columns: 1fr; 
       gap: 40px; 
     }
-    .about-container { margin-top: 40px; }
+
+    /* REGRA PARA CONTROLAR O TOPO NO MOBILE */
+    .about-container { 
+      margin-top: 0px !important; /* Zera a margem do desktop */
+      padding-top: 10px;          /* AJUSTE AQUI: diminua este valor para encostar mais */
+      padding-left: 20px; 
+      padding-right: 20px; 
+    }
   }
 </style>

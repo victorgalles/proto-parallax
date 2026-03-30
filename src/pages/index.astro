@@ -123,29 +123,44 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 </script>
 
 <style>
-  /* ESTILOS ORIGINAIS PC - MANTIDOS */
-  .video-gallery { max-width: 1100px; margin: 40px auto 100px auto; padding: 0 40px; display: flex; flex-direction: column; gap: 80px; }
+  /* --- REGRAS PARA PC (Desktop) --- */
+  .video-gallery { 
+    max-width: 1100px; 
+    margin: 120px auto 100px auto; /* Aumentado para 120px para não encostar no header no PC */
+    padding: 0 40px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 80px; 
+  }
   .project-row { display: grid; grid-template-columns: 1.2fr 0.8fr; align-items: center; gap: 50px; }
   .project-row:nth-child(even) { direction: rtl; }
   .project-row:nth-child(even) .info-content { direction: ltr; }
-  .video-placeholder, .image-container { width: 100%; aspect-ratio: 16/9; border: 1px solid rgba(27, 86, 253, 0.4); overflow: hidden; position: relative; background-size: cover; background-position: center; }
+  
+  .video-placeholder, .image-container { 
+    width: 100%; 
+    aspect-ratio: 16/9; 
+    border: 1px solid rgba(27, 86, 253, 0.4); 
+    overflow: hidden; 
+    position: relative; 
+    background-size: cover; 
+    background-position: center; 
+  }
   .project-image-tag { width: 100%; height: 100%; object-fit: cover; }
   .blue-overlay { position: absolute; inset: 0; background-color: rgba(27, 86, 253, 0.6); opacity: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
   .play-hint { color: white; font-family: monospace; font-size: 0.7rem; border: 1px solid white; padding: 4px 8px; }
   .video-placeholder:hover .blue-overlay { opacity: 1; }
   
-  /* LIGHTBOX & TEXTOS */
   .lightbox-modal { border: none; background: transparent; outline: none; }
   .lightbox-modal::backdrop { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
   .modal-content { display: flex; flex-direction: column; align-items: center; cursor: zoom-out; }
   .full-image { max-width: 90vw; max-height: 80vh; border: 1px solid rgb(27, 86, 253); }
   .modal-caption { margin-top: 10px; font-family: monospace; font-size: 0.7rem; color: rgb(27, 86, 253); text-transform: uppercase; }
+  
   .project-date { font-family: monospace; font-size: 0.7rem; color: rgb(27, 86, 253); opacity: 0.5; display: block; }
   .project-title { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; color: rgb(27, 86, 253); }
   .project-description { font-size: 0.85rem; line-height: 1.4; color: rgb(27, 86, 253); margin-bottom: 15px; max-width: 380px; }
   .tag { font-size: 0.65rem; color: rgb(27, 86, 253); font-family: monospace; opacity: 0.6; margin-right: 8px; }
 
-  /* GALERIA EDITORIAL PC */
   .editorial-gallery-container { margin-top: 100px; }
   .gallery-description { font-size: 0.85rem; font-style: italic; color: rgb(27, 86, 253); opacity: 0.8; margin-bottom: 40px; }
   .editorial-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; grid-auto-flow: dense; }
@@ -158,7 +173,7 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   .editorial-item:hover .editorial-image { transform: scale(1.05); }
   .no-filter { filter: none !important; }
 
-  /* CURSOR MOBILE */
+  /* MOBILE CURSOR */
   .mobile-cursor-dot {
     position: fixed;
     width: 25px;
@@ -178,22 +193,21 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
     z-index: 5;
   }
 
-  /* MEDIA QUERIES MOBILE EXCLUSIVAS */
+  /* --- REGRAS EXCLUSIVAS MOBILE --- */
   @media (max-width: 900px) {
-    .video-gallery { padding-top: 160px; padding-left: 20px; padding-right: 20px; }
-    .project-row { grid-template-columns: 1fr; }
+    .video-gallery { 
+      margin-top: 0 !important; /* Remove a margem do PC no Mobile */
+      padding-top: 80px; /* Ajuste aqui o quanto você quer que desça em relação ao header mobile */
+      padding-left: 20px; 
+      padding-right: 20px; 
+      gap: 50px; 
+    }
+    .project-row { grid-template-columns: 1fr; gap: 15px; }
     .editorial-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
     .editorial-item:nth-child(n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 16/9; }
+    .editorial-gallery-container { margin-top: 50px; }
     
     .mobile-only-link { display: block; }
-
-    /* REMOVE TEXTO E OVERLAY NO MOBILE */
-    .video-placeholder .blue-overlay {
-      display: none !important; /* Esconde o overlay azul e o texto PLAY_VIDEO */
-    }
-    
-    .video-placeholder {
-      border: 1px solid rgba(27, 86, 253, 0.2); /* Borda mais suave no mobile */
-    }
+    .video-placeholder .blue-overlay { display: none !important; }
   }
 </style>

@@ -52,9 +52,9 @@ const pageTitle = "VIC // CONTACT";
 <style>
   .contact-container {
     max-width: 1200px;
-    /* Margem alta para não ficar embaixo do Header Fixo */
-    margin: 0 auto;
-    padding: 100px 40px 100px 40px;
+    /* Alinhado com o About: 80px topo, 100px base */
+    margin: 100px auto 100px auto; 
+    padding: 0 40px;
   }
 
   .contact-header {
@@ -63,18 +63,18 @@ const pageTitle = "VIC // CONTACT";
 
   .section-label {
     font-family: monospace;
-    color: rgb(27, 86, 253);
+    color: rgb(27, 86, 253); /* O mesmo azul vibrante */
     font-weight: bold;
     letter-spacing: 2px;
-    font-size: 0.8rem;
-    margin-bottom: 1px;
+    font-size: 0.9rem;       /* Aumentado de 0.8 para 0.9 para igualar ao About */
+    margin-bottom: 25px;     /* Espaçamento idêntico ao do About */
     display: block;
-    opacity: 0.6;
+    opacity: 1;              /* Removida a opacidade baixa para a cor ficar sólida */
+    text-transform: uppercase;
   }
-
+  
   .contact-title {
-    /* clamp(min, ideal, max) */
-    font-size: clamp(2rem, 8vw, 2rem);
+    font-size: clamp(2rem, 8vw, 2.5rem); /* Ajustado para manter o peso visual */
     color: rgb(27, 86, 253);
     font-weight: 800;
     line-height: 0.9;
@@ -88,11 +88,11 @@ const pageTitle = "VIC // CONTACT";
     font-weight: 400;
   }
 
-  /* Grid System */
+  /* Grid System - Alinhado com a info-grid do About */
   .contact-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template-columns: 1fr 1.5fr; /* Mesma proporção do About */
+    gap: 80px; /* Mesmo gap do About */
     border-top: 1px solid rgba(27, 86, 253, 0.3);
     padding-top: 60px;
   }
@@ -147,10 +147,13 @@ const pageTitle = "VIC // CONTACT";
     letter-spacing: 3px;
   }
 
-  /* Responsivo Mobile */
-  @media (max-width: 768px) {
+  /* --- AJUSTES EXCLUSIVOS MOBILE --- */
+  @media (max-width: 900px) {
     .contact-container {
-      padding: 70px 25px 60px 25px;
+      margin-top: 0px !important; /* Zera margem desktop */
+      padding-top: 90px;          /* AJUSTE AQUI: valor manual para o topo mobile */
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .contact-grid {
@@ -160,7 +163,7 @@ const pageTitle = "VIC // CONTACT";
     }
 
     .contact-title {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       line-height: 1;
     }
 
@@ -171,10 +174,6 @@ const pageTitle = "VIC // CONTACT";
     .contact-footer-line {
       justify-content: center;
       text-align: center;
-    }
-
-    .glitch-text {
-      letter-spacing: 1px;
     }
   }
 </style>
