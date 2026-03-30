@@ -30,13 +30,30 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
                 target="_blank" 
                 class="mobile-only-link"
               ></a>
-
               <div class="blue-overlay"><span class="play-hint">PLAY_VIDEO</span></div>
+            </div>
+          ) : project.data.videoLocal ? (
+            <div class="video-placeholder local-video-container">
+              <video 
+                src={project.data.videoLocal} 
+                autoplay 
+                loop 
+                muted 
+                playsinline 
+                class="project-video-tag no-filter"
+              ></video>
             </div>
           ) : (
             <div class="image-container no-filter cursor-zoom-in">
               {project.data.image && (
-                <img src={project.data.image} alt={project.data.title} class="project-image-tag no-filter" onclick={`document.getElementById('modal-${project.id}').showModal()`} />
+                <img 
+                  src={project.data.image} 
+                  alt={project.data.title} 
+                  class="project-image-tag no-filter" 
+                  loading="lazy" 
+                  decoding="async"
+                  onclick={`document.getElementById('modal-${project.id}').showModal()`} 
+                />
                 <dialog id={`modal-${project.id}`} class="lightbox-modal" onclick="this.close()">
                   <div class="modal-content">
                     <img src={project.data.image} alt={project.data.title} class="full-image" />
@@ -47,6 +64,7 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
             </div>
           )}
         </div>
+        
         <div class="info-column">
           <div class="info-content">
             <div class="meta-header">
@@ -73,15 +91,19 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
           {galeriaFotos.map((foto, index) => (
             <div class="editorial-item no-filter cursor-zoom-in">
               <img 
-                src={foto} 
-                alt={`Still ${index + 1}`} 
+                src={foto.src} 
+                alt={foto.caption || `Still ${index + 1}`} 
                 class="editorial-image no-filter"
+                loading="lazy"
+                decoding="async"
                 onclick={`document.getElementById('modal-gal-${index}').showModal()`}
               />
               <dialog id={`modal-gal-${index}`} class="lightbox-modal" onclick="this.close()">
                 <div class="modal-content">
-                  <img src={foto} alt={`Still ${index + 1}`} class="full-image" />
-                  <p class="modal-caption">{`[STILL_0${index + 1}]`} // CLOSE</p>
+                  <img src={foto.src} alt={foto.caption} class="full-image" />
+                  <p class="modal-caption">
+                    [{foto.caption ? foto.caption.toUpperCase() : `STILL_0${index + 1}`}] // CLOSE
+                  </p>
                 </div>
               </dialog>
             </div>
@@ -123,10 +145,10 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 </script>
 
 <style>
-  /* --- REGRAS PARA PC (Desktop) --- */
+  /* --- REGRAS GERAIS --- */
   .video-gallery { 
     max-width: 1100px; 
-    margin: 120px auto 100px auto; /* Aumentado para 120px para não encostar no header no PC */
+    margin: 120px auto 100px auto; 
     padding: 0 40px; 
     display: flex; 
     flex-direction: column; 
@@ -144,69 +166,100 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
     position: relative; 
     background-size: cover; 
     background-position: center; 
+    background-color: #e5e5e5;
   }
+
+  .project-video-tag { width: 100%; height: 100%; object-fit: cover; display: block; }
   .project-image-tag { width: 100%; height: 100%; object-fit: cover; }
-  .blue-overlay { position: absolute; inset: 0; background-color: rgba(27, 86, 253, 0.6); opacity: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+  .blue-overlay { position: absolute; inset: 0; background-color: rgba(27, 86, 253, 0.6); opacity: 0; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; z-index: 2; }
   .play-hint { color: white; font-family: monospace; font-size: 0.7rem; border: 1px solid white; padding: 4px 8px; }
   .video-placeholder:hover .blue-overlay { opacity: 1; }
   
+  /* MODAL / LIGHTBOX */
   .lightbox-modal { border: none; background: transparent; outline: none; }
   .lightbox-modal::backdrop { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
   .modal-content { display: flex; flex-direction: column; align-items: center; cursor: zoom-out; }
   .full-image { max-width: 90vw; max-height: 80vh; border: 1px solid rgb(27, 86, 253); }
-  .modal-caption { margin-top: 10px; font-family: monospace; font-size: 0.7rem; color: rgb(27, 86, 253); text-transform: uppercase; }
+  .modal-caption { 
+    margin-top: 15px; 
+    font-family: monospace; 
+    font-size: 0.7rem; 
+    color: rgb(27, 86, 253); 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    border: 1px solid rgba(27, 86, 253, 0.3);
+    padding: 4px 10px;
+    background: rgba(27, 86, 253, 0.05);
+  }
   
+  /* TEXTOS PROJETOS */
   .project-date { font-family: monospace; font-size: 0.7rem; color: rgb(27, 86, 253); opacity: 0.5; display: block; }
   .project-title { font-size: 0.9rem; font-weight: 900; text-transform: uppercase; color: rgb(27, 86, 253); }
   .project-description { font-size: 0.85rem; line-height: 1.4; color: rgb(27, 86, 253); margin-bottom: 15px; max-width: 380px; }
   .tag { font-size: 0.65rem; color: rgb(27, 86, 253); font-family: monospace; opacity: 0.6; margin-right: 8px; }
 
+  /* --- NOVA GRADE EDITORIAL (GRID INTELIGENTE) --- */
   .editorial-gallery-container { margin-top: 100px; }
   .gallery-description { font-size: 0.85rem; font-style: italic; color: rgb(27, 86, 253); opacity: 0.8; margin-bottom: 40px; }
-  .editorial-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; grid-auto-flow: dense; }
-  .editorial-item { position: relative; overflow: hidden; border: 1px solid rgba(27, 86, 253, 0.1); background: #f9f9f9; transition: transform 0.4s ease; }
-  .editorial-item:nth-child(4n+1) { grid-column: span 2; grid-row: span 2; aspect-ratio: 1/1; }
-  .editorial-item:nth-child(4n+2) { grid-column: span 1; grid-row: span 2; aspect-ratio: 9/16; }
-  .editorial-item:nth-child(4n+3) { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
-  .editorial-item:nth-child(4n+4) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
+  
+  .editorial-grid { 
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 20px; 
+    grid-auto-flow: dense; /* Crucial para preencher espaços vazios */
+    align-items: stretch;
+  }
+  
+  .editorial-item { 
+    position: relative; 
+    overflow: hidden; 
+    border: 1px solid rgba(27, 86, 253, 0.1); 
+    background: #e5e5e5; 
+    transition: transform 0.4s ease;
+    content-visibility: auto;
+    /* Padrão: Prioridade Horizontal */
+    grid-column: span 2;
+    aspect-ratio: 16/9;
+  }
+
+  /* Fotos que serão Verticais (ex: cada 3ª foto) */
+  .editorial-item:nth-child(3n) { 
+    grid-column: span 1; 
+    grid-row: span 2;
+    aspect-ratio: 3/4; 
+  }
+
+  /* Fotos que serão Quadradas (ex: cada 5ª foto) */
+  .editorial-item:nth-child(5n) {
+    grid-column: span 1;
+    grid-row: span 1;
+    aspect-ratio: 1/1;
+  }
+
   .editorial-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
   .editorial-item:hover .editorial-image { transform: scale(1.05); }
   .no-filter { filter: none !important; }
 
   /* MOBILE CURSOR */
   .mobile-cursor-dot {
-    position: fixed;
-    width: 25px;
-    height: 25px;
-    background-color: #1b56fd;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10000;
-    display: none; 
-    transform: translate(-50%, -50%);
+    position: fixed; width: 25px; height: 25px; background-color: #1b56fd;
+    border-radius: 50%; pointer-events: none; z-index: 10000;
+    display: none; transform: translate(-50%, -50%);
   }
 
-  .mobile-only-link {
-    display: none;
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-  }
+  .mobile-only-link { display: none; position: absolute; inset: 0; z-index: 5; }
 
   /* --- REGRAS EXCLUSIVAS MOBILE --- */
   @media (max-width: 900px) {
-    .video-gallery { 
-      margin-top: 0 !important; /* Remove a margem do PC no Mobile */
-      padding-top: 80px; /* Ajuste aqui o quanto você quer que desça em relação ao header mobile */
-      padding-left: 20px; 
-      padding-right: 20px; 
-      gap: 50px; 
-    }
+    .video-gallery { margin-top: 0 !important; padding-top: 80px; padding-left: 20px; padding-right: 20px; gap: 50px; }
     .project-row { grid-template-columns: 1fr; gap: 15px; }
-    .editorial-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-    .editorial-item:nth-child(n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 16/9; }
+    .editorial-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .editorial-item, .editorial-item:nth-child(n) { 
+      grid-column: span 1; 
+      grid-row: span 1; 
+      aspect-ratio: 1/1; 
+    }
     .editorial-gallery-container { margin-top: 50px; }
-    
     .mobile-only-link { display: block; }
     .video-placeholder .blue-overlay { display: none !important; }
   }
