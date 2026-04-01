@@ -2,12 +2,15 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection, getEntry } from 'astro:content';
 
+
 const allProjects = await getCollection('projects');
 const galeriaEntry = await getEntry('galeria', 'fotos');
 const galeriaFotos = galeriaEntry?.data.fotos || [];
 const galeriaDesc = galeriaEntry?.data.description || "";
 
 const pageTitle = "victor galles // datajunkz";
+const description = "Victor Galles (Datajunkz) Portfolio. Exploring the intersection of code, movement, and physical space through interactive installations and generative art.";
+
 const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 ---
 
