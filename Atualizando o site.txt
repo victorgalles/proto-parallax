@@ -1,8 +1,26 @@
+Para abrir o site no localhost:
+
+1. Abrir o CMD e Navegar até a Pasta
+Primeiro, você precisa "avisar" ao computador onde o seu site está guardado.
+
+Abra o CMD.
+
+Digite cd (espaço) e o caminho da pasta onde está o seu projeto.
+
+2. Rodar o Comando de Desenvolvimento
+Uma vez dentro da pasta, digite o comando do Astro:
+
+Bash
+npm run dev
+
+___________________________________
+
+
 "Envie" as alterações para o mundo
 Quando estiver satisfeito, abra o terminal (CMD) dentro da pasta proto-parallax e rode estes 3 comandos em sequência:
 
 Preparar: git add . (avisa ao Git que você quer salvar tudo o que mudou).
 
-Carimbar: git commit -m "adicionando novo projeto" (dá um nome para essa versão).
+Carimbar: git commit -m "v6" (dá um nome para essa versão).
 
 Lançar: git push origin main (manda os arquivos para o GitHub).

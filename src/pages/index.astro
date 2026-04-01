@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection, getEntry } from 'astro:content';
-import { Image } from 'astro:assets'; // Import para otimização automática
 
 const allProjects = await getCollection('projects');
 const galeriaEntry = await getEntry('galeria', 'fotos');
@@ -13,8 +12,6 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
 ---
 
 <BaseLayout title={pageTitle}>
-  <div id="mobile-custom-cursor" class="mobile-cursor-dot"></div>
-  
   <div class="video-gallery">
     {allProjects.map((project) => (
       <div class="project-row">
@@ -57,7 +54,7 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
                 />
                 <dialog id={`modal-${project.id}`} class="lightbox-modal" onclick="this.close()">
                   <div class="modal-content">
-                    <img src={project.data.image} alt={project.data.title} class="full-image" />
+                    <img src={project.data.image} alt={project.data.title} class="full-image" loading="lazy" />
                     <p class="modal-caption">{project.data.title} // CLOSE</p>
                   </div>
                 </dialog>
@@ -91,20 +88,18 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
         <div class="editorial-grid">
           {galeriaFotos.map((foto, index) => (
             <div class="editorial-item no-filter cursor-zoom-in">
-              {/* THUMBNAIL OTIMIZADA: O Astro redimensiona para 800px e converte para WebP automaticamente */}
               <img 
                 src={foto.src} 
                 alt={foto.caption || `Still ${index + 1}`} 
                 class="editorial-image no-filter"
                 loading="lazy"
                 decoding="async"
-                width="800" 
+                width="800"
                 onclick={`document.getElementById('modal-gal-${index}').showModal()`}
               />
               
               <dialog id={`modal-gal-${index}`} class="lightbox-modal" onclick="this.close()">
                 <div class="modal-content">
-                  {/* IMAGEM COMPLETA: Carregada apenas quando o modal abre */}
                   <img src={foto.src} alt={foto.caption} class="full-image" loading="lazy" />
                   <p class="modal-caption">
                     [{foto.caption ? foto.caption.toUpperCase() : `STILL_0${index + 1}`}] // CLOSE
@@ -119,38 +114,8 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   </div>
 </BaseLayout>
 
-<script is:inline>
-  function initMobileUI() {
-    const cursor = document.getElementById('mobile-custom-cursor');
-    if (!cursor) return;
-
-    const moveCursor = (e) => {
-      const touch = e.touches[0];
-      requestAnimationFrame(() => {
-        cursor.style.left = `${touch.clientX}px`;
-        cursor.style.top = `${touch.clientY}px`;
-      });
-    };
-
-    document.addEventListener('touchstart', (e) => {
-      cursor.style.display = 'block';
-      moveCursor(e);
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-      moveCursor(e);
-    }, { passive: true });
-
-    document.addEventListener('touchend', () => { cursor.style.display = 'none'; });
-    document.addEventListener('touchcancel', () => { cursor.style.display = 'none'; });
-  }
-
-  initMobileUI();
-  document.addEventListener('astro:after-swap', initMobileUI);
-</script>
-
 <style>
-  /* --- REGRAS GERAIS --- */
+  /* --- REGRAS GERAIS (PC) --- */
   .video-gallery { 
     max-width: 1100px; 
     margin: 120px auto 100px auto; 
@@ -164,13 +129,10 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   .project-row:nth-child(even) .info-content { direction: ltr; }
   
   .video-placeholder, .image-container { 
-    width: 100%; 
-    aspect-ratio: 16/9; 
+    width: 100%; aspect-ratio: 16/9; 
     border: 1px solid rgba(27, 86, 253, 0.4); 
-    overflow: hidden; 
-    position: relative; 
-    background-size: cover; 
-    background-position: center; 
+    overflow: hidden; position: relative; 
+    background-size: cover; background-position: center; 
     background-color: #f0f0f0;
   }
 
@@ -186,15 +148,9 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   .modal-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; cursor: zoom-out; }
   .full-image { max-width: 90vw; max-height: 85vh; border: 1px solid rgba(27, 86, 253, 0.5); object-fit: contain; }
   .modal-caption { 
-    margin-top: 15px; 
-    font-family: monospace; 
-    font-size: 0.7rem; 
-    color: #1b56fd; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-    border: 1px solid rgba(27, 86, 253, 0.3);
-    padding: 4px 10px;
-    background: rgba(27, 86, 253, 0.05);
+    margin-top: 15px; font-family: monospace; font-size: 0.7rem; color: #1b56fd; 
+    text-transform: uppercase; letter-spacing: 1px; border: 1px solid rgba(27, 86, 253, 0.3);
+    padding: 4px 10px; background: rgba(27, 86, 253, 0.05);
   }
   
   /* TEXTOS PROJETOS */
@@ -203,60 +159,47 @@ const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`
   .project-description { font-size: 0.85rem; line-height: 1.4; color: rgb(27, 86, 253); margin-bottom: 15px; max-width: 380px; }
   .tag { font-size: 0.65rem; color: rgb(27, 86, 253); font-family: monospace; opacity: 0.6; margin-right: 8px; }
 
-  /* --- GRADE EDITORIAL --- */
+  /* --- GRADE EDITORIAL (PC) --- */
   .editorial-gallery-container { margin-top: 100px; }
   .gallery-description { font-size: 0.85rem; font-style: italic; color: rgb(27, 86, 253); opacity: 0.8; margin-bottom: 40px; }
   
   .editorial-grid { 
-    display: grid; 
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 20px; 
-    grid-auto-flow: dense;
-    align-items: stretch;
+    display: grid; grid-template-columns: repeat(4, 1fr); 
+    gap: 20px; grid-auto-flow: dense; align-items: stretch;
   }
   
   .editorial-item { 
-    position: relative; 
-    overflow: hidden; 
+    position: relative; overflow: hidden; 
     border: 1px solid rgba(27, 86, 253, 0.1); 
-    background: #f0f0f0; 
-    transition: transform 0.4s ease;
-    grid-column: span 2;
-    aspect-ratio: 16/9;
+    background: #f0f0f0; transition: transform 0.4s ease;
+    grid-column: span 2; aspect-ratio: 16/9;
   }
 
   .editorial-item:nth-child(3n) { grid-column: span 1; grid-row: span 2; aspect-ratio: 3/4; }
   .editorial-item:nth-child(5n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
 
   .editorial-image { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-    display: block; 
-    opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+    width: 100%; height: 100%; object-fit: cover; display: block; 
+    opacity: 0; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
   }
-
-  /* Fade in quando a imagem carrega */
   .editorial-image[src] { opacity: 1; }
-
   .editorial-item:hover .editorial-image { transform: scale(1.05); }
-  .no-filter { filter: none !important; }
 
-  /* MOBILE */
-  .mobile-cursor-dot {
-    position: fixed; width: 25px; height: 25px; background-color: #1b56fd;
-    border-radius: 50%; pointer-events: none; z-index: 10000;
-    display: none; transform: translate(-50%, -50%);
-  }
-  .mobile-only-link { display: none; position: absolute; inset: 0; z-index: 5; }
-
+  /* --- VERSÃO MOBILE (GRADE IDENTIDADE) --- */
   @media (max-width: 900px) {
-    .video-gallery { margin-top: 0 !important; padding-top: 80px; padding-left: 20px; padding-right: 20px; gap: 50px; }
-    .project-row { grid-template-columns: 1fr; gap: 15px; }
+    .video-gallery { margin-top: 0 !important; padding: 100px 20px 50px 20px; gap: 60px; }
+    .project-row { grid-template-columns: 1fr; gap: 20px; }
+    
+    /* Força a grade de 2 colunas para manter as quebras artísticas */
     .editorial-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .editorial-item, .editorial-item:nth-child(n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
-    .editorial-gallery-container { margin-top: 50px; }
-    .mobile-only-link { display: block; }
+    
+    /* Reaplica as proporções no mobile */
+    .editorial-item { grid-column: span 2; aspect-ratio: 16/9; }
+    .editorial-item:nth-child(3n) { grid-column: span 1; grid-row: span 2; aspect-ratio: 3/4; }
+    .editorial-item:nth-child(5n) { grid-column: span 1; grid-row: span 1; aspect-ratio: 1/1; }
+
+    .mobile-only-link { position: absolute; inset: 0; z-index: 10; display: block; }
   }
+
+  .no-filter { filter: none !important; }
 </style>

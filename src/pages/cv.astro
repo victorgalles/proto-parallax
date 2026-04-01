@@ -3,90 +3,182 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 ---
 
-<BaseLayout title="Resume" sideBarActiveItemID="cv">
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Profile</div>
+<BaseLayout title="Curriculum Vitae | Victor Galles" sideBarActiveItemID="cv">
+  <div class="cv-container">
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Summary</div>
+    </div>
+
+    <div class="mb-10 text-justify">
+      Creative Technologist and New Media Artist. Specializing in high-end video 
+      editing and interactive environments via TouchDesigner, OSC, and real-time rendering. 
+      Currently developing research at the intersection of body movement and generative systems.
+    </div>
+
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Education</div>
+    </div>
+
+    <div class="time-line-container grid gap-4 mb-10">
+      <TimeLineElement
+        title="Erasmus Mundus Joint Master in Digital Arts and Creativity (DIGICREA)"
+        subtitle="2025 – Present | France, Portugal, and Poland"
+      />
+      <TimeLineElement
+        title="B.A. in Cinema and Audiovisual Arts"
+        subtitle="2017 – 2021 | Universidade do Sul de Santa Catarina (UNISUL), Brazil"
+      />
+    </div>
+
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Experience</div>
+    </div>
+
+    <div class="time-line-container mb-10">
+      <TimeLineElement
+        title="Audiovisual Assistant | Cetro Máquinas"
+        subtitle="July 2024 – July 2025 | Bauru, Brazil"
+      >
+        Editing and assembling raw footage into polished video content using Adobe Premiere Pro. 
+        Responsible for seamless transitions, color correction, and audio synchronization to maintain high production quality.
+      </TimeLineElement>
+      
+      <TimeLineElement
+        title="Interactive Video Artist | Freelancer"
+        subtitle="June 2022 – Present"
+      >
+        Developing generative art installations using TouchDesigner. Designing abstract compositions 
+        and real-time animations driven by audio analysis, sensor data, and user interaction.
+      </TimeLineElement>
+
+      <TimeLineElement
+        title="TouchDesigner Workshop Leader | UNESP"
+        subtitle="November 2024 | São Paulo State University, Bauru, Brazil"
+      >
+        Led an introductory workshop on visual programming and interactive media design. 
+        Empowered students to explore creative possibilities in real-time visual arts using TouchDesigner.
+      </TimeLineElement>
+
+      <TimeLineElement
+        title="Audiovisual Assistant | UNISUL"
+        subtitle="May 2019 – July 2019 | Palhoça, Brazil"
+      >
+        Supported instructors in teaching Adobe Audition. Provided guidance in audio editing 
+        and sound design fundamentals, helping students master professional workflows.
+      </TimeLineElement>
+    </div>
+
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Complementary Courses</div>
+    </div>
+
+    <div class="time-line-container mb-10">
+      <TimeLineElement
+        title="Film Sound Workshop"
+        subtitle="2022 | Anima Educação"
+      >
+        Intensive training focused on sound aesthetics and technical workflows for cinematic productions with 
+        <a href="https://www.carlostrilha.com.br/" target="_blank" class="cv-link">Carlos Trilha</a>.
+      </TimeLineElement>
+
+      <TimeLineElement
+        title="Electronic Music Production"
+        subtitle="2017 | Florianópolis, Brazil"
+      >
+        Technical workshop covering the fundamentals of synthesis, sequencing, and electronic music arrangement with 
+        <a href="https://ra.co/dj/vantoniomusic" target="_blank" class="cv-link">VAntonio (D-EDGE)</a>.
+      </TimeLineElement>
+
+      <TimeLineElement
+        title="Video Editing Workshop | Mercosul Audiovisual Forum"
+        subtitle="2017 | Florianópolis, Brazil"
+      >
+        Specialized training in advanced editing techniques and audiovisual language during the Mercosul Forum.
+      </TimeLineElement>
+    </div>
+
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Awards & Official Selections</div>
+    </div>
+
+    <ul class="list-disc mx-6 mb-10 grid gap-2">
+      <li>
+        <strong>eth_OS:</strong> Official Selection at Museu da Imagem e do Som (MIS), São Paulo (2022).
+      </li>
+      <li>
+        <strong>eth_OS:</strong> Official Selection at 18th Athens Digital Arts Festival, Greece (2022).
+      </li>
+      <li>
+        <strong>eth_OS:</strong> US Exhibition at Light Matter Film Festival, Alfred University, NY (2022).
+      </li>
+      <li>
+        <strong>eth_OS:</strong> Nominee for Best Experimental Film at Global University Film Awards, Hong Kong (2022).
+      </li>
+      <li>
+        <strong>eth_OS:</strong> Winner of Best Editing, Best Sound Design, and Best Production at Unisul Film Awards (2022).
+      </li>
+      <li>
+        <strong>eth_OS:</strong> Semi-finalist for Best Experimental Film at Student World Impact Film Festival (2023).
+      </li>
+    </ul>
+
+    <div class="mb-5">
+      <div class="text-3xl w-full font-bold">Skills</div>
+    </div>
+
+    <ul class="list-disc md:columns-3 columns-2 mx-6">
+      <li>TouchDesigner</li>
+      <li>Adobe Premiere Pro</li>
+      <li>Adobe After Effects</li>
+      <li>Adobe Photoshop</li>
+      <li>Adobe Illustrator & InDesign</li>
+      <li>Sound Design (Adobe Audition)</li>
+      <li>Interactive Systems (Arduino/OSC)</li>
+      <li>Projection Mapping</li>
+      <li>Generative Arts</li>
+      <li>Motion Sensors Integration</li>
+    </ul>
   </div>
-
-  <div class="mb-10 text-justify">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis
-    aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-    cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </div>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Education</div>
-  </div>
-
-  <div class="time-line-container grid gap-4 mb-10">
-    <TimeLineElement
-      title="Title Name"
-      subtitle="[start year] to [end year] at [Study Center Name], [City], [Country]"
-    />
-    <TimeLineElement
-      title="Title Name"
-      subtitle="[start year] to [end year] at [Study Center Name], [City], [Country]"
-    />
-  </div>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Experience</div>
-  </div>
-
-  <div class="time-line-container mb-10">
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Job Title at Project or Company Name"
-      subtitle="From [Start Date] to [End Date] at [Company], [City], [Country]"
-    >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
-    </TimeLineElement>
-  </div>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Certifications</div>
-  </div>
-
-  <ul class="list-disc mx-6 mb-10 grid gap-2">
-    <li>
-      <a href="#" target="_blank"> Certification Name (with link)</a>
-    </li>
-    <li>
-      <a href="#" target="_blank"> Certification Name (with link)</a>
-    </li>
-  </ul>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Skills</div>
-  </div>
-
-  <ul class="list-disc md:columns-5 columns-2 mx-6">
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-    <li>Skill Name</li>
-  </ul>
 </BaseLayout>
+
+<style>
+  .cv-container {
+    max-width: 1200px;
+    margin: 80px auto 100px auto;
+    padding: 0 40px;
+    color: rgb(27, 86, 253);
+  }
+
+  .cv-link {
+    text-decoration: none;
+    font-weight: 700;
+    background-color: rgba(27, 86, 253, 0.1);
+    padding: 0px 4px;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+
+  .cv-link:hover {
+    background-color: rgb(27, 86, 253);
+    color: #f4f4f4;
+  }
+
+  @media (max-width: 900px) {
+    .cv-container {
+      margin-top: 0px !important;
+      padding-top: 100px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  .font-bold {
+    font-family: monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+  }
+</style>
