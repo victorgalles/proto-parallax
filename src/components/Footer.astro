@@ -3,10 +3,53 @@ const today = new Date();
 ---
 
 <footer class="footer footer-center block mb-5 pt-10">
-  <div class="pb-2">
-    &copy; {today.getFullYear()} Victor Galles // DATAJUNKZ
-  </div>
-  <div class="inline opacity-75">
+  <div class="footer-container">
+    <div class="copyright pb-2">
+      &copy; {today.getFullYear()} VICTOR GALLES // DATAJUNKZ
+    </div>
+    
+    <div class="contacts">
+      <a href="mailto:victorfreitasgs@gmail.com" class="method-link">EMAIL</a>
+      <span class="separator">|</span>
+      <a href="https://instagram.com/datajunkz" target="_blank" class="method-link">INSTAGRAM</a>
+    </div>
   </div>
 </footer>
-<style></style>
+
+<style>
+  .footer-container {
+    color: rgb(27, 86, 253);
+    font-family: monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+  }
+
+  .copyright {
+    font-weight: 400;
+    opacity: 0.8;
+  }
+
+  .contacts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .method-link {
+    text-decoration: none;
+    color: rgb(27, 86, 253);
+    font-weight: 700;
+    transition: opacity 0.3s ease;
+  }
+
+  .method-link:hover {
+    opacity: 0.6;
+  }
+
+  .separator {
+    opacity: 0.4;
+    font-weight: 300;
+  }
+</style>

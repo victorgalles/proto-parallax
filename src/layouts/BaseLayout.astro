@@ -63,6 +63,9 @@ const {
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mouseup', onMouseUp);
+        window.closeModal = function(el) {
+  el.closest('dialog').close();
+};
 
         // Feedback para links (usando delegação para funcionar em novos elementos)
         document.addEventListener('mouseover', (e) => {

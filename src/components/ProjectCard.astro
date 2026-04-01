@@ -1,0 +1,56 @@
+---
+// src/components/ProjectCard.astro
+const { project } = Astro.props;
+const getYoutubeThumb = (id) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+---
+
+<div class="project-row">
+  <div class="video-column">
+    {project.data.youtubeID ? (
+      <div 
+        class="video-placeholder" 
+        data-video-id={project.data.youtubeID}
+        style={`background-image: url(${getYoutubeThumb(project.data.youtubeID)});`}
+        onclick="if(window.innerWidth > 900) { this.innerHTML = `<iframe src='https://www.youtube.com/embed/${this.dataset.videoId}?autoplay=1&modestbranding=1&rel=0' allow='autoplay; encrypted-media' allowfullscreen></iframe>`; this.classList.add('is-playing'); }"
+      >
+        <a href={`https://www.youtube.com/watch?v=${project.data.youtubeID}`} target="_blank" class="mobile-only-link"></a>
+        <div class="blue-overlay"><span class="play-hint">PLAY_VIDEO</span></div>
+      </div>
+    ) : project.data.videoLocal ? (
+      <div class="video-placeholder local-video-container">
+        <video src={project.data.videoLocal} autoplay loop muted playsinline class="project-video-tag no-filter"></video>
+      </div>
+    ) : (
+      <div class="image-container no-filter cursor-zoom-in">
+        {project.data.image && (
+          <img 
+            src={project.data.image} 
+            alt={project.data.title} 
+            class="project-image-tag no-filter" 
+            loading="lazy" 
+            onclick={`document.getElementById('modal-${project.id}').showModal()`} 
+          />
+          <dialog id={`modal-${project.id}`} class="lightbox-modal">
+            <div class="modal-content">
+              <img src={project.data.image} alt={project.data.title} class="full-image" />
+              <p class="modal-caption">{project.data.title} // CLOSE</p>
+            </div>
+          </dialog>
+        )}
+      </div>
+    )}
+  </div>
+  
+  <div class="info-column">
+    <div class="info-content">
+      <div class="meta-header">
+        {project.data.date && <span class="project-date">[{project.data.date}]</span>}
+        <h2 class="project-title">{project.data.title}</h2>
+      </div>
+      <p class="project-description">{project.data.description || "Experimental digital art piece."}</p>
+      <div class="project-tags">
+        {project.data.tags?.map(tag => <span class="tag">#{tag.toLowerCase()}</span>)}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+---
+// src/components/GalleryStill.astro
+const { foto, index } = Astro.props;
+---
+
+<div class="editorial-item no-filter cursor-zoom-in">
+  <img 
+    src={foto.src} 
+    alt={foto.caption || `Still ${index + 1}`} 
+    class="editorial-image no-filter"
+    loading="lazy"
+    onclick={`document.getElementById('modal-gal-${index}').showModal()`}
+  /> 
+  
+  <dialog id={`modal-gal-${index}`} class="lightbox-modal gallery-dialog">
+    <div class="modal-content">
+      <button class="nav-btn prev" onclick="event.stopPropagation(); changeModal(this, -1)"> &lt; </button>
+      
+      <div class="image-wrapper" onclick="event.stopPropagation()">
+        <img src={foto.src} alt={foto.caption} class="full-image" />
+      </div>
+
+      <button class="nav-btn next" onclick="event.stopPropagation(); changeModal(this, 1)"> &gt; </button>
+      
+      <p class="modal-caption" onclick="event.stopPropagation()">
+        [{foto.caption ? foto.caption.toUpperCase() : `STILL_0${index + 1}`}] 
+        <span 
+          class="close-trigger" 
+          onclick="window.closeModal(this)"
+          style="cursor: pointer; margin-left: 10px; text-decoration: underline;"
+        >
+          // CLOSE
+        </span>
+      </p>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  /* AJUSTE DE ALINHAMENTO */
+  .editorial-item {
+    box-sizing: border-box; /* Garante que bordas não aumentem o tamanho do item */
+    max-width: 100%;       /* Impede que a foto "pule" para fora do grid */
+    overflow: hidden;      /* Corta qualquer rebarba */
+    display: flex;         /* Ajuda no alinhamento interno */
+  }
+
+  .editorial-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Gatilho de fechar */
+  .close-trigger {
+    pointer-events: auto !important;
+    transition: opacity 0.2s;
+  }
+  
+  .close-trigger:hover {
+    opacity: 0.5;
+  }
+
+  .modal-caption {
+    pointer-events: auto !important;
+  }
+</style>
