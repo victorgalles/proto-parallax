@@ -17,9 +17,7 @@ const {
 <html lang="en" data-theme="lofi">
 <head>
     <BaseHead title={title} description={description} image={image} ogType={ogType} />
-    
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    
     {TRANSITION_API && <ViewTransitions />}
   </head>
   <body>
@@ -41,7 +39,6 @@ const {
         const cursor = document.getElementById('custom-cursor');
         if (!cursor) return;
 
-        // Reset de posição para evitar saltos na troca de página
         let mouseX = 0;
         let mouseY = 0;
 
@@ -59,15 +56,11 @@ const {
         const onMouseDown = () => cursor.classList.add('cursor-clicking');
         const onMouseUp = () => cursor.classList.remove('cursor-clicking');
 
-        // Adiciona os eventos
         window.addEventListener('mousemove', onMouseMove);
         window.addEventListener('mousedown', onMouseDown);
         window.addEventListener('mouseup', onMouseUp);
-        window.closeModal = function(el) {
-  el.closest('dialog').close();
-};
 
-        // Feedback para links (usando delegação para funcionar em novos elementos)
+        // Feedback para links e botões
         document.addEventListener('mouseover', (e) => {
           if (e.target.closest('a') || e.target.closest('button')) {
             cursor.style.transform = 'translate(-50%, -50%) scale(2.5)';
@@ -83,67 +76,60 @@ const {
         });
       }
 
-      // 1. Inicializa na carga inicial
       initCursor();
-
-      // 2. Reinicializa após a troca de página do ViewTransitions
       document.addEventListener('astro:after-swap', initCursor);
+      
+      // Função global de fechar modal movida para escopo window real
+      window.closeModal = function(el) {
+        const d = el.closest('dialog');
+        if (d) d.close();
+      };
     </script>
 
 <style is:global>
 
-/* 1. CONTROLE DO HEADER */
+  /* 1. RESET E CORES GERAIS */
+  html, body {
+    background-color: #f4f4f4 !important;
+    color: rgb(27, 86, 253); /* Define a cor padrão sem travar tudo */
+    margin: 0;
+    padding: 0;
+    cursor: none !important;
+  }
+
+  /* Esconde o mouse original mas permite cores customizadas */
+  * { 
+    cursor: none !important; 
+    box-sizing: border-box; 
+  }
+
+  /* 2. CONTROLE DO HEADER E MAIN */
   header {
-    /* Ajuste o padding de cima e de baixo do seu nome/menu */
     padding-top: 20px; 
-    padding-bottom: 10px; /* Diminuir aqui remove o vácuo abaixo do nome */
-    
-    /* Se houver uma altura mínima, zere ela */
+    padding-bottom: 10px;
     min-height: auto !important; 
     margin-bottom: 0 !important;
   }
 
-  /* 2. CONTROLE DO CONTEÚDO (Onde a mágica acontece) */
-  main, .about-container {
-    /* Se o seu header NÃO for fixo (scrolla junto): */
+  main {
     margin-top: 10px !important; 
-    
-    /* Se o seu header FOR fixo (fica parado no topo): 
-       Aumente este valor se o texto sumir atrás do nome "Victor Galles"
-       Diminua se o vácuo estiver muito grande. */
     padding-top: 90px !important; 
   }
 
-  /* 3. AJUSTE DO NOME E LINKS */
   .nav-wrapper, .header-container {
-    /* Se houver um grid ou flex no header, alinhe ao topo */
     align-items: flex-start !important;
   }
-  /* 1. FORÇA COR AZUL GLOBAL EM TUDO QUE É TEXTO */
-  *, *::before, *::after {
-    cursor: none !important; /* Mantém o mouse escondido */
-    color: rgb(27, 86, 253) !important; /* O seu Azul Victor Galles */
-    border-color: rgba(27, 86, 253, 0.2) !important; /* Bordas suaves em azul */
-  }
 
-  /* 2. AJUSTE DO FUNDO */
-  html, body {
-    background-color: #f4f4f4 !important; /* Fundo cinza claro artístico */
-    margin: 0;
-    padding: 0;
-  }
-
-  /* 3. EXCEÇÕES NECESSÁRIAS (Elementos que precisam de outra cor) */
+  /* 3. EXCEÇÕES E ELEMENTOS ESPECÍFICOS */
   .blue-overlay {
     background-color: rgba(27, 86, 253, 0.95) !important;
   }
 
-  /* Texto dentro do overlay azul deve ser branco para leitura */
   .blue-overlay *, .play-text, .project-title-overlay {
     color: white !important;
   }
 
-  /* 4. O SEU CURSOR AZUL */
+  /* 4. O CURSOR CUSTOMIZADO */
   #custom-cursor {
     width: 25px;
     height: 25px;
@@ -160,13 +146,17 @@ const {
     opacity: 0;
   }
 
-  /* 5. SELEÇÃO DE TEXTO (Quando o usuário clica e arrasta) */
+  /* 5. SELEÇÃO E VÍDEOS */
   ::selection {
     background: rgb(27, 86, 253);
     color: white;
   }
 
-  /* Correção para o vídeo preencher todo o espaço */
+  .video-placeholder {
+    position: relative;
+    overflow: hidden;
+  }
+
   .video-placeholder iframe {
     width: 100% !important;
     height: 100% !important;
@@ -176,13 +166,6 @@ const {
     border: none;
   }
 
-  /* Garante que o container do vídeo tenha posição relativa */
-  .video-placeholder {
-    position: relative;
-    overflow: hidden;
-  }
-
-  
 </style>
   </body>
 </html>

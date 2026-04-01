@@ -22,27 +22,39 @@ const { foto, index } = Astro.props;
 
       <button class="nav-btn next" onclick="event.stopPropagation(); changeModal(this, 1)"> &gt; </button>
       
-      <p class="modal-caption" onclick="event.stopPropagation()">
-        [{foto.caption ? foto.caption.toUpperCase() : `STILL_0${index + 1}`}] 
-        <span 
-          class="close-trigger" 
-          onclick="window.closeModal(this)"
-          style="cursor: pointer; margin-left: 10px; text-decoration: underline;"
-        >
-          // CLOSE
-        </span>
-      </p>
+      <!-- O NOVO BLOCO ENTRA AQUI, NO LUGAR DO ANTIGO P -->
+      <div class="modal-info-container" onclick="event.stopPropagation()">
+        <div class="description-block">
+          {foto.caption ? foto.caption.split('\n').map((line, i) => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return null;
+
+            // Diferencia Ano, Título (primeira linha após o ano) e Tags
+            if (trimmedLine.startsWith('[')) {
+              return <span class="desc-year">{trimmedLine}</span>;
+            }
+            if (trimmedLine.startsWith('#')) {
+              return <span class="desc-tags">{trimmedLine}</span>;
+            }
+            // Se for a primeira linha útil, tratamos como título negrito
+            return <span class="desc-main-text">{trimmedLine}</span>;
+          }) : <span class="desc-main-text">STILL_0{index + 1}</span>}
+        </div>
+        
+        <button class="close-archive-btn" onclick="window.closeModal(this)">
+          // CLOSE_ARCHIVE
+        </button>
+      </div>
     </div>
   </dialog>
 </div>
 
 <style>
-  /* AJUSTE DE ALINHAMENTO */
   .editorial-item {
-    box-sizing: border-box; /* Garante que bordas não aumentem o tamanho do item */
-    max-width: 100%;       /* Impede que a foto "pule" para fora do grid */
-    overflow: hidden;      /* Corta qualquer rebarba */
-    display: flex;         /* Ajuda no alinhamento interno */
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
   }
 
   .editorial-image {
@@ -52,17 +64,15 @@ const { foto, index } = Astro.props;
     display: block;
   }
 
-  /* Gatilho de fechar */
-  .close-trigger {
-    pointer-events: auto !important;
-    transition: opacity 0.2s;
-  }
-  
-  .close-trigger:hover {
-    opacity: 0.5;
+  /* Estilos específicos deste componente que não estão no global */
+  .description-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
-  .modal-caption {
+  /* Garante que o container de info seja visível e clicável */
+  .modal-info-container {
     pointer-events: auto !important;
   }
 </style>
